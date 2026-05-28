@@ -1,0 +1,56 @@
+campaign:
+  name: "Freedom Portfolio"
+  startDate: "2026-05-28"
+  durationDays: 90
+  weeklyBudgetHours: 5
+
+lanes:
+  - id: lane-1
+    name: "Grid Bots + Ghost Tiger"
+    status: "on-track"
+    target: "5% / month"
+    lastUpdated: "2026-05-28"
+    nextAction: "Review weekly P&L and adjust grid spacing"
+  - id: lane-2
+    name: "Amazon Merch Tier 10"
+    status: "watch"
+    target: "Tier 10 → 25"
+    lastUpdated: "2026-05-27"
+    nextAction: "Research 2 niches with Merch Informer"
+  - id: lane-3
+    name: "Portfolio Command Center"
+    status: "on-track"
+    target: "Deploy MVP"
+    lastUpdated: "2026-05-28"
+    nextAction: "Add analytics and share URL"
+
+weeklyBudget:
+  usedHours: 2.5
+  totalHours: 5
+
+coolingQueue:
+  - idea: "Start a paid newsletter"
+    submittedAt: "2026-05-26T09:00:00Z"
+    status: "pending"
+  - idea: "Buy a domain-flipping bot script"
+    submittedAt: "2026-05-25T14:30:00Z"
+    status: "pending"
+
+weeklyRhythm:
+  weekStart: "2026-05-25"
+  days:
+    - day: "Monday"
+      label: "Grid bot review + Merch niche scan"
+      done: true
+    - day: "Tuesday"
+      label: "Create 2 Merch designs"
+      done: true
+    - day: "Wednesday"
+      label: "Portfolio site work"
+      done: false
+    - day: "Thursday"
+      label: "Ghost Tiger backtest + tune"
+      done: false
+    - day: "Friday"
+      label: "Weekly wrap-up + next-week plan"
+      done: false

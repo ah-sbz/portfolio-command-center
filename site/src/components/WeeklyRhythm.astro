@@ -1,0 +1,25 @@
+---
+interface Props {
+  days: Array<{
+    day: string;
+    label: string;
+    done: boolean;
+  }>;
+}
+const { days } = Astro.props;
+---
+
+<div class="card">
+  <div class="card-title">Weekly Rhythm</div>
+  <ul class="checklist">
+    {days.map((d) => (
+      <li>
+        <span class={`check-box ${d.done ? 'checked' : ''}`}>{d.done ? '✓' : ''}</span>
+        <span><strong>{d.day}:</strong> {d.label}</span>
+      </li>
+    ))}
+  </ul>
+  <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem;">
+    Edit src/data/portfolio.yml to update daily checkboxes.
+  </p>
+</div>

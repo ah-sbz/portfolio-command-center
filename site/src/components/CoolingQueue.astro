@@ -1,0 +1,42 @@
+---
+interface Props {
+  items: Array<{
+    idea: string;
+    submittedAt: string;
+    status: string;
+  }>;
+}
+const { items } = Astro.props;
+
+function fmtDate(iso: string) {
+  const d = new Date(iso);
+  return d.toISOString().slice(0, 10) + ' ' + d.toTimeString().slice(0, 5);
+}
+
+function hoursAgo(iso: string) {
+  const h = Math.floor((Date.now() - new Date(iso).getTime()) / 3600000);
+  return h < 24 ? `${h}h ago` : `${Math.floor(h / 24)}d ago`;
+}
+---
+
+<div class="card">
+  <div class="card-title">72-Hour Cooling Queue</div>
+  {items.length === 0 && (
+    <p style="color: var(--text-muted); font-size: 0.875rem;">No ideas in queue. Stay focused.</p>
+  )}
+  {items.map((item) => (
+    <div class="queue-item">
+      <div>
+        <div>{item.idea}</div>
+        <div class="timestamp">{fmtDate(item.submittedAt)} — {hoursAgo(item.submittedAt)}</div>
+      </div>
+      <div class="queue-actions">
+        <button class="btn" disabled>Approve</button>
+        <button class="btn" disabled>Reject</button>
+      </div>
+    </div>
+  ))}
+  <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem;">
+    Edit src/data/portfolio.yml to add, approve, or reject ideas.
+  </p>
+</div>

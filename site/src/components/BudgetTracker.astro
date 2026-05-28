@@ -1,0 +1,37 @@
+---
+interface Props {
+  usedHours: number;
+  totalHours: number;
+}
+const { usedHours, totalHours } = Astro.props;
+
+const remaining = Math.max(0, totalHours - usedHours);
+const pct = totalHours > 0 ? Math.round((usedHours / totalHours) * 100) : 0;
+
+let color = 'fill-green';
+let statusText = 'On Track';
+if (pct > 80) {
+  color = 'fill-red';
+  statusText = 'Over Budget';
+} else if (pct > 60) {
+  color = 'fill-yellow';
+  statusText = 'Caution';
+}
+---
+
+<div class="card">
+  <div class="card-title">Weekly Budget</div>
+  <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem;">
+    <span class="big-number tabular" style={pct > 80 ? 'color: var(--red);' : pct > 60 ? 'color: var(--yellow);' : 'color: var(--green);'}>
+      {usedHours.toFixed(1)}
+    </span>
+    <span style="color: var(--text-muted);">/ {totalHours} hrs used</span>
+  </div>
+  <div class="progress-bar">
+    <div class={`progress-fill ${color}`} style={`width: ${pct}%`}></div>
+  </div>
+  <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.875rem;">
+    <span>Remaining: <strong class="tabular">{remaining.toFixed(1)} hrs</strong></span>
+    <span style={pct > 80 ? 'color: var(--red);' : pct > 60 ? 'color: var(--yellow);' : 'color: var(--green);'}>{statusText}</span>
+  </div>
+</div>

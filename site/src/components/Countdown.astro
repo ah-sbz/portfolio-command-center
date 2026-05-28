@@ -1,0 +1,32 @@
+---
+interface Props {
+  startDate: string;
+  durationDays: number;
+}
+const { startDate, durationDays } = Astro.props;
+
+const start = new Date(startDate);
+const now = new Date();
+const end = new Date(start);
+end.setDate(end.getDate() + durationDays);
+
+const totalMs = end.getTime() - start.getTime();
+const elapsedMs = now.getTime() - start.getTime();
+const remainingMs = end.getTime() - now.getTime();
+
+const elapsedDays = Math.max(0, Math.min(durationDays, Math.floor(elapsedMs / 86400000)));
+const remainingDays = Math.max(0, Math.min(durationDays, Math.ceil(remainingMs / 86400000)));
+const pct = durationDays > 0 ? Math.round((elapsedDays / durationDays) * 100) : 0;
+---
+
+<div class="card" style="text-align: center;">
+  <div class="card-title">90-Day Campaign</div>
+  <div class="big-number tabular" style="color: var(--blue);">{remainingDays}</div>
+  <p style="color: var(--text-muted); font-size: 0.875rem;">days remaining</p>
+  <div class="progress-bar" style="margin-top: 0.75rem;">
+    <div class="progress-fill fill-blue" style={`width: ${pct}%`}></div>
+  </div>
+  <p class="timestamp" style="margin-top: 0.5rem;">
+    Day {elapsedDays} of {durationDays} — Ends {end.toISOString().slice(0, 10)}
+  </p>
+</div>

@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LaneCard from '../components/LaneCard.astro';
+import Countdown from '../components/Countdown.astro';
+import BudgetTracker from '../components/BudgetTracker.astro';
+import CoolingQueue from '../components/CoolingQueue.astro';
+import WeeklyRhythm from '../components/WeeklyRhythm.astro';
+
+import fs from 'node:fs';
+import yaml from 'js-yaml';
+
+const raw = fs.readFileSync(new URL('../data/portfolio.yml', import.meta.url), 'utf-8');
+const data = yaml.load(raw) as any;
+---
+
+<Layout title="Freedom Portfolio — Command Center">
+  <div class="container">
+    <header class="hero">
+      <h1>⚡ {data.campaign.name}</h1>
+      <p class="hero-meta">90-day income campaign · Max 5 hrs/week · No new streams</p>
+    </header>
+
+    <section class="stack">
+      <div class="grid-3">
+        {data.lanes.map((lane: any) => (
+          <LaneCard
+            name={lane.name}
+            status={lane.status}
+            target={lane.target}
+            lastUpdated={lane.lastUpdated}
+            nextAction={lane.nextAction}
+          />
+        ))}
+      </div>
+
+      <div class="grid-2">
+        <Countdown
+          startDate={data.campaign.startDate}
+          durationDays={data.campaign.durationDays}
+        />
+        <BudgetTracker
+          usedHours={data.weeklyBudget.usedHours}
+          totalHours={data.weeklyBudget.totalHours}
+        />
+      </div>
+
+      <div class="grid-2">
+        <CoolingQueue items={data.coolingQueue} />
+        <WeeklyRhythm days={data.weeklyRhythm.days} />
+      </div>
+    </section>
+
+    <footer style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.75rem;">
+      <p>Built with Astro · Hosted on GitHub Pages · Edit data in src/data/portfolio.yml</p>
+    </footer>
+  </div>
+</Layout>
