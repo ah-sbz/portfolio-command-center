@@ -6,10 +6,9 @@ import BudgetTracker from '../components/BudgetTracker.astro';
 import CoolingQueue from '../components/CoolingQueue.astro';
 import WeeklyRhythm from '../components/WeeklyRhythm.astro';
 
-import fs from 'node:fs';
+import raw from '../data/portfolio.yml?raw';
 import yaml from 'js-yaml';
 
-const raw = fs.readFileSync(new URL('../data/portfolio.yml', import.meta.url), 'utf-8');
 const data = yaml.load(raw) as any;
 ---
 

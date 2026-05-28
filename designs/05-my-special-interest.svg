@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4500 5400" width="4500" height="5400">
+  <rect width="4500" height="5400" fill="#F8F6F3"/>
+  <text x="2250" y="2050" font-family="Impact, Arial Black, sans-serif" font-size="160" fill="#2D2D2D" text-anchor="middle" dominant-baseline="middle" letter-spacing="15">MY SPECIAL INTEREST IS</text>
+  <line x1="800" y1="2250" x2="3700" y2="2250" stroke="#6B5B95" stroke-width="20" stroke-linecap="round"/>
+  <text x="2250" y="2350" font-family="Impact, Arial Black, sans-serif" font-size="160" fill="#6B5B95" text-anchor="middle" dominant-baseline="middle" letter-spacing="15">[TOPIC]</text>
+  <text x="2250" y="2750" font-family="Impact, Arial Black, sans-serif" font-size="160" fill="#2D2D2D" text-anchor="middle" dominant-baseline="middle" letter-spacing="15">AND I WILL TALK ABOUT IT</text>
+  <text x="2250" y="3000" font-family="Impact, Arial Black, sans-serif" font-size="280" fill="#FFD700" text-anchor="middle" dominant-baseline="middle" letter-spacing="10">FOR 4 HOURS</text>
+  <text x="2250" y="3300" font-family="Helvetica, Arial, sans-serif" font-size="72" fill="#2D2D2D" text-anchor="middle" dominant-baseline="middle">No, I cannot make it shorter. Yes, you asked.</text>
+</svg>
