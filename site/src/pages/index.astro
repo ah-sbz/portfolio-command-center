@@ -5,11 +5,45 @@ import Countdown from '../components/Countdown.astro';
 import BudgetTracker from '../components/BudgetTracker.astro';
 import CoolingQueue from '../components/CoolingQueue.astro';
 import WeeklyRhythm from '../components/WeeklyRhythm.astro';
+import PortfolioSummary from '../components/PortfolioSummary.astro';
 
 import raw from '../data/portfolio.yml?raw';
 import yaml from 'js-yaml';
 
 const data = yaml.load(raw) as any;
+
+// Compute derived metrics for PortfolioSummary
+const usedHours = data.weeklyBudget?.usedHours || 0;
+const totalHours = data.weeklyBudget?.totalHours || 5;
+const totalIncome = (data.lanes || []).reduce((sum: number, l: any) => sum + (l.incomeThisWeek || 0), 0);
+const monthlyTarget = data.campaign?.monthlyTarget || 150;
+const currency = data.campaign?.currency || 'USD';
+
+const start = new Date(data.campaign.startDate);
+const now = new Date();
+const elapsedDays = Math.max(0, Math.floor((now.getTime() - start.getTime()) / 86400000));
+const totalDays = data.campaign.durationDays || 90;
+
+// Queue ready count
+const queueReady = (data.coolingQueue || []).filter((item: any) => {
+  const submitted = new Date(item.submittedAt).getTime();
+  return (now.getTime() - submitted) / 3600000 >= 72;
+}).length;
+
+// Portfolio health
+let health: 'healthy' | 'watch' | 'over-budget' = 'healthy';
+const anyBlocked = (data.lanes || []).some((l: any) => l.status === 'blocked');
+const anyWatch = (data.lanes || []).some((l: any) => l.status === 'watch');
+const targetProgress = monthlyTarget > 0 ? (totalIncome / monthlyTarget) * 100 : 0;
+const expectedProgress = totalDays > 0 ? (elapsedDays / totalDays) * 100 : 0;
+
+if (usedHours > totalHours) {
+  health = 'over-budget';
+} else if (anyBlocked || usedHours > totalHours * 0.8 || targetProgress < expectedProgress * 0.7) {
+  health = 'watch';
+} else if (anyWatch || usedHours > totalHours * 0.6) {
+  health = 'watch';
+}
 ---
 
 <Layout title="Freedom Portfolio — Command Center">
@@ -20,6 +54,19 @@ const data = yaml.load(raw) as any;
     </header>
 
     <section class="stack">
+      {/* Portfolio Health Summary — full width, always visible */}
+      <PortfolioSummary
+        health={health}
+        usedHours={usedHours}
+        totalHours={totalHours}
+        totalIncome={totalIncome}
+        monthlyTarget={monthlyTarget}
+        currency={currency}
+        queueReady={queueReady}
+        elapsedDays={elapsedDays}
+        totalDays={totalDays}
+      />
+
       <div class="grid-3">
         {data.lanes.map((lane: any) => (
           <LaneCard
@@ -28,6 +75,9 @@ const data = yaml.load(raw) as any;
             target={lane.target}
             lastUpdated={lane.lastUpdated}
             nextAction={lane.nextAction}
+            progress={lane.progress}
+            incomeThisWeek={lane.incomeThisWeek}
+            currency={currency}
           />
         ))}
       </div>
@@ -49,8 +99,9 @@ const data = yaml.load(raw) as any;
       </div>
     </section>
 
-    <footer style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.75rem;">
+    <footer style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.875rem;">
       <p>Built with Astro · Hosted on GitHub Pages · Edit data in src/data/portfolio.yml</p>
+      <p style="margin-top: 0.25rem; font-size: 0.75rem;">Autism/ADHD-adapted · One glance, one state</p>
     </footer>
   </div>
 </Layout>

@@ -1,18 +1,26 @@
 :root {
+  /* Semantic palette — aligned with design spec */
+  --green: #34a853;
+  --green-bg: #14532d;
+  --green-tint: rgba(52, 168, 83, 0.12);
+  --yellow: #f9ab00;
+  --yellow-bg: #713f12;
+  --yellow-tint: rgba(249, 171, 0, 0.12);
+  --red: #ea4335;
+  --red-bg: #7f1d1d;
+  --red-tint: rgba(234, 67, 53, 0.12);
+  --blue: #4285f4;
+  --blue-bg: #1e3a8a;
+  --blue-tint: rgba(66, 133, 244, 0.12);
+  --neutral: #5f6368;
+
+  /* Surface colors */
   --bg: #0b0f19;
   --surface: #111827;
   --surface-raised: #1f2937;
   --border: #374151;
   --text: #f3f4f6;
   --text-muted: #9ca3af;
-  --green: #22c55e;
-  --green-bg: #14532d;
-  --yellow: #eab308;
-  --yellow-bg: #713f12;
-  --red: #ef4444;
-  --red-bg: #7f1d1d;
-  --blue: #3b82f6;
-  --blue-bg: #1e3a8a;
   --radius: 8px;
   --gap: 1rem;
 }
@@ -271,3 +279,160 @@ h1, h2, h3 {
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
+
+/* --- Portfolio Health Tints --- */
+.health-green { background: var(--green-tint); border-left: 4px solid var(--green); }
+.health-yellow { background: var(--yellow-tint); border-left: 4px solid var(--yellow); }
+.health-red { background: var(--red-tint); border-left: 4px solid var(--red); }
+
+/* --- Queue Status Badges --- */
+.queue-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.queue-status-cooling { background: var(--surface-raised); color: var(--text-muted); }
+.queue-status-ready { background: var(--yellow-tint); color: var(--yellow); }
+.queue-status-approved { background: var(--green-tint); color: var(--green); }
+.queue-status-rejected { background: var(--red-tint); color: var(--red); text-decoration: line-through; }
+
+/* --- Improved Checklist (ADHD: 24px touch target, today accent) --- */
+.checklist-adhd li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+  min-height: 40px;
+}
+
+.checklist-adhd li:last-child {
+  border-bottom: none;
+}
+
+.checklist-adhd li.today {
+  border-left: 4px solid var(--blue);
+  padding-left: 0.75rem;
+  margin-left: -0.75rem;
+  font-weight: 600;
+}
+
+.checklist-adhd li.completed span.label {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.check-box-adhd {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  color: transparent;
+}
+
+.check-box-adhd.checked {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--bg);
+}
+
+/* --- Button Variants (ADHD: reject easier than approve) --- */
+.btn-primary {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+.btn-primary:hover {
+  background: #2d8e47;
+  border-color: #2d8e47;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+.btn-ghost:hover {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.btn-neutral {
+  background: var(--surface-raised);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* --- Queue Item States --- */
+.queue-item.state-cooling { opacity: 0.85; }
+.queue-item.state-ready { background: var(--yellow-tint); border-radius: 6px; padding: 0.5rem; margin: 0.25rem 0; }
+.queue-item.state-approved { background: var(--green-tint); border-radius: 6px; padding: 0.5rem; margin: 0.25rem 0; }
+.queue-item.state-rejected { opacity: 0.5; text-decoration: line-through; }
+
+/* --- Progress Labels --- */
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* --- Full-width summary row --- */
+.summary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: var(--radius);
+}
+
+.summary-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.summary-metric .value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.summary-metric .label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* --- Countdown compact --- */
+.countdown-compact {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.countdown-compact .big-number {
+  font-size: 2rem;
+}
+

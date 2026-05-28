@@ -24,8 +24,8 @@ PATH=/usr/local/bin:/usr/bin:/bin
 0 11 * * 0 cd /home/dietpi/.paperclip/instances/default/projects/cf423e32-bb03-499d-8d10-93a04cbe2d98/8c9ba353-b4c0-4b26-80c7-9e5b4981aca2/_default && ./ntfy-reminders/send.sh freedom-lane3 "Lane 3: deep work on utility website. 90-min focused block." --tags=computer,wrench --priority=4
 
 # --- Weekly review (Sundays 20:00) ---
-# Mirrors to Mattermost for richer formatting & thread discussion
-0 20 * * 0 cd /home/dietpi/.paperclip/instances/default/projects/cf423e32-bb03-499d-8d10-93a04cbe2d98/8c9ba353-b4c0-4b26-80c7-9e5b4981aca2/_default && ./ntfy-reminders/send.sh freedom-weekly-review "Weekly review: update tracking spreadsheet, check 5% target, plan next week." --tags=memo,clipboard --priority=4 --mattermost
+# Generates a data-driven rich digest and mirrors to Mattermost + ntfy
+0 20 * * 0 cd /home/dietpi/.paperclip/instances/default/projects/cf423e32-bb03-499d-8d10-93a04cbe2d98/8c9ba353-b4c0-4b26-80c7-9e5b4981aca2/_default/site && node scripts/weekly-digest.cjs
 
 # --- Mid-week discipline check ---
 # Wednesday 12:00 — Anti-idea-hopping 72h filter

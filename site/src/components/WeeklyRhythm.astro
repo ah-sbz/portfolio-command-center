@@ -7,19 +7,38 @@ interface Props {
   }>;
 }
 const { days } = Astro.props;
+
+const dayMap: Record<string, number> = {
+  Sunday: 0, Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5, Saturday: 6,
+};
 ---
 
 <div class="card">
   <div class="card-title">Weekly Rhythm</div>
-  <ul class="checklist">
+  <ul class="checklist-adhd" data-weekly-rhythm>
     {days.map((d) => (
-      <li>
-        <span class={`check-box ${d.done ? 'checked' : ''}`}>{d.done ? '✓' : ''}</span>
-        <span><strong>{d.day}:</strong> {d.label}</span>
+      <li data-day={d.day} class={d.done ? 'completed' : ''}>
+        <span class={`check-box-adhd ${d.done ? 'checked' : ''}`}>{d.done ? '✓' : ''}</span>
+        <span class="label"><strong>{d.day}:</strong> {d.label}</span>
       </li>
     ))}
   </ul>
   <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem;">
     Edit src/data/portfolio.yml to update daily checkboxes.
   </p>
+
+  <script>
+    (function () {
+      const today = new Date().getDay();
+      const map = { Sunday: 0, Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5, Saturday: 6 };
+      const container = document.querySelector('[data-weekly-rhythm]');
+      if (!container) return;
+      container.querySelectorAll('li').forEach((li) => {
+        const dayName = li.getAttribute('data-day');
+        if (dayName && map[dayName] === today) {
+          li.classList.add('today');
+        }
+      });
+    })();
+  </script>
 </div>

@@ -3,24 +3,38 @@ campaign:
   startDate: "2026-05-28"
   durationDays: 90
   weeklyBudgetHours: 5
+  monthlyTarget: 150
+  currency: "USD"
 
 lanes:
   - id: lane-1
     name: "Grid Bots + Ghost Tiger"
     status: "on-track"
     target: "5% / month"
+    progress: 83
+    incomeThisWeek: 12.40
+    trend: "up"
+    timeSpent: 0.5
     lastUpdated: "2026-05-28"
     nextAction: "Review weekly P&L and adjust grid spacing"
   - id: lane-2
     name: "Amazon Merch Tier 10"
     status: "watch"
     target: "Tier 10 → 25"
+    progress: 60
+    incomeThisWeek: 0.00
+    trend: "flat"
+    timeSpent: 1.5
     lastUpdated: "2026-05-27"
     nextAction: "Research 2 niches with Merch Informer"
   - id: lane-3
     name: "Portfolio Command Center"
     status: "on-track"
     target: "Deploy MVP"
+    progress: 100
+    incomeThisWeek: 0.00
+    trend: "up"
+    timeSpent: 0.5
     lastUpdated: "2026-05-28"
     nextAction: "Add analytics and share URL"
 
@@ -32,9 +46,13 @@ coolingQueue:
   - idea: "Start a paid newsletter"
     submittedAt: "2026-05-26T09:00:00Z"
     status: "pending"
+    excitement: 4
+    budgetFit: false
   - idea: "Buy a domain-flipping bot script"
     submittedAt: "2026-05-25T14:30:00Z"
     status: "pending"
+    excitement: 3
+    budgetFit: true
 
 weeklyRhythm:
   weekStart: "2026-05-25"
@@ -53,4 +71,10 @@ weeklyRhythm:
       done: false
     - day: "Friday"
       label: "Weekly wrap-up + next-week plan"
+      done: false
+    - day: "Saturday"
+      label: "Rest / catch-up buffer"
+      done: false
+    - day: "Sunday"
+      label: "Merch batch (2h) + Lane 3 build (1h) + Weekly review"
       done: false

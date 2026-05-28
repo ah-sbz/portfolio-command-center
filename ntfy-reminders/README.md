@@ -12,12 +12,26 @@ Self-hosted notification reminders using the existing [ntfy](https://ntfy.sh) Do
 ./ntfy-reminders/send.sh freedom-weekly-review "Weekly review reminders active ✅"
 ./ntfy-reminders/send.sh freedom-discipline   "Discipline filter active ✅"
 
-# 2. Install the cron schedule
+# 2. Check that the weekly digest script runs
+# (it reads site/src/data/portfolio.yml and posts to Mattermost + ntfy)
+cd site && node scripts/weekly-digest.cjs --dry-run
+
+# 3. Install the cron schedule
 crontab ntfy-reminders/crontab.txt
 
-# 3. Verify
+# 4. Verify
 ntfy sub freedom-grid-bots   # or open https://ntfy.huhn.tk/freedom-grid-bots in your browser
 ```
+
+## Weekly Digest
+
+The Sunday 20:00 entry now runs `site/scripts/weekly-digest.cjs`, which:
+- Reads the live YAML data from `site/src/data/portfolio.yml`
+- Generates a rich Markdown digest (Lane Status, Time Budget, 5% Target, 72h Queue, Next Week Plan, One Decision Needed)
+- Posts the rich digest to the Mattermost `freedom-portfolio` channel
+- Posts a short summary to the ntfy `freedom-weekly-review` topic
+
+Run manually with `--dry-run` to preview without sending.
 
 ## Topics
 

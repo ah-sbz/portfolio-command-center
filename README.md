@@ -14,15 +14,29 @@ A static, autism/ADHD-adapted dashboard for tracking the 90-day Freedom Portfoli
 
 All state lives in `site/src/data/portfolio.yml`. Edit this file and commit to `main`, then run the build-and-deploy steps below to update the live site.
 
+### New Fields (NEX-29)
+- `campaign.monthlyTarget` — dollar amount for the 5% monthly goal
+- `campaign.currency` — defaults to USD
+- `lanes[*].progress` — 0-100 progress bar fill
+- `lanes[*].incomeThisWeek` — lane income shown on the card
+- `lanes[*].timeSpent` — hours spent this week (used by PortfolioSummary)
+- `lanes[*].trend` — `up`, `down`, or `flat` (arrow in weekly digest)
+- `coolingQueue[*].excitement` — 1-5 impulse score
+- `coolingQueue[*].budgetFit` — `true`/`false` hard constraint check
+
 ### Key Sections
 
 | Section | What to edit |
 |---------|-------------|
-| `campaign` | Start date and duration |
-| `lanes` | Status, targets, and next actions for each income lane |
+| `campaign` | Start date, duration, monthly target |
+| `lanes` | Status, targets, progress, income, and next actions |
 | `weeklyBudget` | Hours used this week |
 | `coolingQueue` | Ideas waiting out the 72-hour filter |
 | `weeklyRhythm` | Daily checkbox state |
+
+## Weekly Digest
+
+A data-driven weekly digest script lives at `site/scripts/weekly-digest.cjs`. It reads `portfolio.yml` and posts a rich Markdown summary to Mattermost plus a short ntfy summary. See `ntfy-reminders/README.md` for cron setup.
 
 ### Status Values
 Use exactly these strings in `status` fields:

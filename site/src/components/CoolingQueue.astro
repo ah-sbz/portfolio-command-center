@@ -4,6 +4,9 @@ interface Props {
     idea: string;
     submittedAt: string;
     status: string;
+    excitement?: number;
+    budgetFit?: boolean;
+    postExcitement?: number;
   }>;
 }
 const { items } = Astro.props;
@@ -13,29 +16,96 @@ function fmtDate(iso: string) {
   return d.toISOString().slice(0, 10) + ' ' + d.toTimeString().slice(0, 5);
 }
 
-function hoursAgo(iso: string) {
-  const h = Math.floor((Date.now() - new Date(iso).getTime()) / 3600000);
-  return h < 24 ? `${h}h ago` : `${Math.floor(h / 24)}d ago`;
+function hoursUntilReady(iso: string) {
+  const submitted = new Date(iso).getTime();
+  const elapsed = (Date.now() - submitted) / 3600000;
+  return Math.max(0, Math.ceil(72 - elapsed));
 }
+
+function isReady(iso: string) {
+  const submitted = new Date(iso).getTime();
+  const elapsed = (Date.now() - submitted) / 3600000;
+  return elapsed >= 72;
+}
+
+const processed = (items || []).map((item) => {
+  const ready = isReady(item.submittedAt);
+  const hoursLeft = hoursUntilReady(item.submittedAt);
+  let state = 'cooling';
+  if (item.status === 'approved') state = 'approved';
+  else if (item.status === 'rejected') state = 'rejected';
+  else if (ready) state = 'ready';
+  return { ...item, ready, hoursLeft, state };
+});
+
+// Sort: ready first, then by soonest expiry
+processed.sort((a, b) => {
+  if (a.ready && !b.ready) return -1;
+  if (!a.ready && b.ready) return 1;
+  return a.hoursLeft - b.hoursLeft;
+});
+
+const coolingCount = processed.filter((i) => i.state === 'cooling').length;
+const readyCount = processed.filter((i) => i.state === 'ready').length;
 ---
 
 <div class="card">
-  <div class="card-title">72-Hour Cooling Queue</div>
-  {items.length === 0 && (
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+    <div class="card-title" style="margin-bottom:0">72-Hour Cooling Queue</div>
+    {readyCount > 0 && (
+      <span style="background: var(--yellow-tint); color: var(--yellow); font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 9999px;">
+        {readyCount} ready
+      </span>
+    )}
+  </div>
+
+  {processed.length === 0 && (
     <p style="color: var(--text-muted); font-size: 0.875rem;">No ideas in queue. Stay focused.</p>
   )}
-  {items.map((item) => (
-    <div class="queue-item">
-      <div>
-        <div>{item.idea}</div>
-        <div class="timestamp">{fmtDate(item.submittedAt)} — {hoursAgo(item.submittedAt)}</div>
+
+  {processed.map((item) => (
+    <div class={`queue-item state-${item.state}`}>
+      <div style="flex: 1; min-width: 0;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+          <span style="font-weight: 500;">{item.idea}</span>
+          {item.state === 'cooling' && (
+            <span class="queue-status queue-status-cooling">🔒 Cooling</span>
+          )}
+          {item.state === 'ready' && (
+            <span class="queue-status queue-status-ready">⏳ Ready</span>
+          )}
+          {item.state === 'approved' && (
+            <span class="queue-status queue-status-approved">✅ Approved</span>
+          )}
+          {item.state === 'rejected' && (
+            <span class="queue-status queue-status-rejected">❌ Rejected</span>
+          )}
+        </div>
+        <div class="timestamp" style="margin-top: 0.25rem;">
+          {fmtDate(item.submittedAt)}
+          {item.state === 'cooling' && (
+            <span> — {item.hoursLeft}h remaining</span>
+          )}
+          {item.state === 'ready' && (
+            <span> — ready for review</span>
+          )}
+        </div>
       </div>
+
       <div class="queue-actions">
-        <button class="btn" disabled>Approve</button>
-        <button class="btn" disabled>Reject</button>
+        {/* Reject on the LEFT (easier to reach) — neutral/ghost style */}
+        <button class="btn btn-ghost" disabled title="Reject this idea">
+          Reject
+        </button>
+
+        {/* Approve on the RIGHT — primary style, higher friction */}
+        <button class="btn btn-primary" disabled title="Approve this idea">
+          Approve
+        </button>
       </div>
     </div>
   ))}
+
   <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem;">
     Edit src/data/portfolio.yml to add, approve, or reject ideas.
   </p>

@@ -5,8 +5,11 @@ interface Props {
   target: string;
   lastUpdated: string;
   nextAction: string;
+  progress?: number;
+  incomeThisWeek?: number;
+  currency?: string;
 }
-const { name, status, target, lastUpdated, nextAction } = Astro.props;
+const { name, status, target, lastUpdated, nextAction, progress = 0, incomeThisWeek, currency = 'USD' } = Astro.props;
 
 const statusClass = {
   'on-track': 'status-on-track',
@@ -16,9 +19,15 @@ const statusClass = {
 
 const statusLabel = {
   'on-track': 'On Track',
-  'watch': 'Watch',
-  'blocked': 'Blocked',
+  'watch': 'Attention',
+  'blocked': 'Off Target',
 }[status] ?? status;
+
+const barColor = {
+  'on-track': 'fill-green',
+  'watch': 'fill-yellow',
+  'blocked': 'fill-red',
+}[status] ?? 'fill-yellow';
 ---
 
 <div class="card">
@@ -28,7 +37,26 @@ const statusLabel = {
       <span class="status-dot"></span>
       {statusLabel}
     </div>
-    <p style="font-size: 0.875rem; color: var(--text-muted);">Target: {target}</p>
+
+    <div style="margin-top: 0.25rem;">
+      <div class="progress-bar" style="margin-top: 0;">
+        <div class={`progress-fill ${barColor}`} style={`width: ${Math.max(0, Math.min(100, progress))}%`}></div>
+      </div>
+      <div class="progress-label">
+        <span>Progress</span>
+        <span class="tabular">{progress}%</span>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem;">
+      <span style="color: var(--text-muted);">Target: {target}</span>
+      {incomeThisWeek !== undefined && (
+        <span class="tabular" style={`font-weight: 600; color: ${incomeThisWeek > 0 ? 'var(--green)' : 'var(--text-muted)'};`}>
+          {incomeThisWeek > 0 ? '+' : ''}{incomeThisWeek.toLocaleString('en-US', { style: 'currency', currency })}
+        </span>
+      )}
+    </div>
+
     <p style="font-size: 0.875rem;"><strong>Next action:</strong> {nextAction}</p>
     <p class="timestamp">Updated: {lastUpdated}</p>
   </div>

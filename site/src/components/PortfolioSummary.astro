@@ -1,0 +1,76 @@
+---
+interface Props {
+  health: 'healthy' | 'watch' | 'over-budget';
+  usedHours: number;
+  totalHours: number;
+  totalIncome: number;
+  monthlyTarget: number;
+  currency: string;
+  queueReady: number;
+  elapsedDays: number;
+  totalDays: number;
+}
+
+const { health, usedHours, totalHours, totalIncome, monthlyTarget, currency, queueReady, elapsedDays, totalDays } = Astro.props;
+
+const remaining = Math.max(0, totalHours - usedHours);
+const pct = totalHours > 0 ? Math.round((usedHours / totalHours) * 100) : 0;
+const targetPct = monthlyTarget > 0 ? Math.round((totalIncome / monthlyTarget) * 100) : 0;
+
+const expectedPct = totalDays > 0 ? Math.round((elapsedDays / totalDays) * 100) : 0;
+const onPace = targetPct >= expectedPct * 0.8;
+
+const healthClass = {
+  'healthy': 'health-green',
+  'watch': 'health-yellow',
+  'over-budget': 'health-red',
+}[health];
+
+const healthLabel = {
+  'healthy': '🟢 Healthy',
+  'watch': '🟡 Watch',
+  'over-budget': '🔴 Over Budget',
+}[health];
+
+const fmt = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency });
+---
+
+<div class={`card summary-row ${healthClass}`}>
+  <div class="summary-metric">
+    <span class="value" style="color: var(--green);">{healthLabel}</span>
+    <span class="label">Portfolio Health</span>
+  </div>
+
+  <div class="summary-metric">
+    <span class="value tabular" style={pct > 80 ? 'color: var(--red);' : pct > 60 ? 'color: var(--yellow);' : 'color: var(--green);'}>
+      {usedHours.toFixed(1)}<span style="font-size:0.75rem;color:var(--text-muted)">/{totalHours}h</span>
+    </span>
+    <span class="label">Time Used</span>
+  </div>
+
+  <div class="summary-metric">
+    <span class="value tabular" style={remaining < 1 ? 'color: var(--red);' : remaining <= 1.5 ? 'color: var(--yellow);' : 'color: var(--green);'}>
+      {remaining.toFixed(1)}h
+    </span>
+    <span class="label">Remaining</span>
+  </div>
+
+  <div class="summary-metric">
+    <span class="value tabular" style={onPace ? 'color: var(--green);' : 'color: var(--yellow);'}>
+      {targetPct}%
+    </span>
+    <span class="label">5% Target</span>
+  </div>
+
+  <div class="summary-metric">
+    <span class="value tabular">{fmt(totalIncome)}</span>
+    <span class="label">Income</span>
+  </div>
+
+  {queueReady > 0 && (
+    <div class="summary-metric">
+      <span class="value tabular" style="color: var(--yellow);">{queueReady}</span>
+      <span class="label">Queue Ready</span>
+    </div>
+  )}
+</div>
