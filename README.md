@@ -8,11 +8,11 @@ A static, autism/ADHD-adapted dashboard for tracking the 90-day Freedom Portfoli
 - GitHub Pages — free hosting
 
 ## Live URL
-> <will be set after first deploy>
+> **https://ah-sbz.github.io/portfolio-command-center/**
 
 ## Editing Your Data
 
-All state lives in `site/src/data/portfolio.yml`. Edit this file and push to `main` to update the site (GitHub Actions rebuilds automatically).
+All state lives in `site/src/data/portfolio.yml`. Edit this file and commit to `main`, then run the build-and-deploy steps below to update the live site.
 
 ### Key Sections
 
@@ -60,6 +60,28 @@ npm run dev
 
 ## Deploying
 
-GitHub Actions automatically builds and deploys on every push to `main`. No manual steps required.
+### Current: Manual `gh-pages` deploy
+The site is live via the `gh-pages` branch. To update after editing data or code:
+
+```bash
+cd site
+npm run build
+cd ..
+git subtree push --prefix site/dist origin gh-pages
+# Or manually: copy dist/ to a clean gh-pages branch and force-push
+```
+
+### Future: GitHub Actions (recommended)
+A workflow file exists at `.github/workflows/deploy.yml`. It will auto-build and deploy on every push to `main` once enabled.
+
+To enable automatic deployment:
+1. In **Settings → Pages → Build and deployment**, switch source to **GitHub Actions**.
+2. Ensure your GitHub token has the `workflow` scope (or use a classic PAT with `repo` + `workflow`).
+3. Push the workflow file to `main`:
+   ```bash
+   git add .github/workflows/deploy.yml
+   git commit -m "Enable GitHub Actions deploy"
+   git push origin main
+   ```
 
 If you fork this repo, enable GitHub Pages in **Settings → Pages → Build and deployment → GitHub Actions**.
